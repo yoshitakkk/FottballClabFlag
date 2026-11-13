@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f0">
+  <title>CREST CLUB — 世界のクラブクイズ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f5f0;
+      --ink: #171916;
+      --muted: #777b72;
+      --line: #dedfd7;
+      --green: #c9f36a;
+      --green-dark: #233310;
+      --white: #fff;
+      --red: #d75c4d;
+      --shadow: 0 16px 48px rgb(34 39 28 / 7%);
+      font-family: Inter, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 87% 2%, rgb(201 243 106 / 17%), transparent 25rem),
+        var(--paper);
+    }
+    button { font: inherit; }
+    .shell { max-width: 1240px; margin: auto; padding: 0 48px; }
+    .topbar {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+    .home-button {
+      display: none;
+      min-height: 36px;
+      padding: 0 13px;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .home-button:focus-visible, .start-button:focus-visible {
+      outline: 3px solid rgb(128 171 64 / 35%);
+      outline-offset: 2px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      color: var(--green-dark);
+      background: var(--green);
+      border-radius: 50%;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      padding-right: 2px;
+    }
+    .brand-name { font-size: 14px; font-weight: 900; letter-spacing: .13em; }
+    main { padding: 40px 0 76px; }
+    .intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: 34px; }
+    .eyebrow { margin: 0 0 12px; color: #64704f; font-size: 10px; font-weight: 800; letter-spacing: .2em; }
+    h1 { margin: 0; font-size: clamp(32px, 4vw, 48px); line-height: 1.16; letter-spacing: -.055em; }
+    .settings-card {
+      display: grid;
+      grid-template-columns: auto minmax(210px, 1fr) minmax(260px, 1.3fr) minmax(220px, 1fr);
+      align-items: start;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+    .settings-card .side-heading { margin: 5px 0 0; white-space: nowrap; }
+    .settings-card > .setting-block { margin-top: 0; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 302px; gap: 20px; align-items: start; }
+    .quiz-card, .settings-card, .stats-card {
+      background: rgb(255 255 255 / 78%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .quiz-card { min-height: 590px; overflow: hidden; }
+    .quiz-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 26px;
+      border-bottom: 1px solid var(--line);
+    }
+    .round-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+    .round-number { color: var(--ink); font-size: 13px; font-weight: 800; }
+    .round-number span { color: #a0a397; font-weight: 500; }
+    .quiz-score { display: none; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .quiz-score b { margin-left: 5px; color: var(--ink); font-size: 15px; }
+    .progress-track { height: 3px; background: #eceee6; }
+    .progress-fill { width: 10%; height: 100%; background: #a6d74f; transition: width .3s ease; }
+    .quiz-body { padding: 30px 34px 32px; }
+    .prompt-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .prompt-title { margin: 0; font-size: 16px; font-weight: 750; }
+    .timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 62px;
+      justify-content: center;
+      padding: 8px 11px;
+      color: #52574d;
+      background: #f1f3eb;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .timer.is-low { color: #a23c33; background: #fff0ed; }
+    .timer svg { width: 13px; height: 13px; }
+    .stage {
+      display: grid;
+      min-height: 257px;
+      place-items: center;
+      margin: 20px 0 23px;
+      background:
+        radial-gradient(ellipse at 50% 54%, rgb(214 227 193 / 36%), transparent 44%),
+        #f7f8f3;
+      border: 1px solid #eceee6;
+      border-radius: 12px;
+      position: relative;
+    }
+    .stage-note {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      z-index: 1;
+      color: #858a7d;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .12em;
+    }
+    .stage::before, .stage::after {
+      content: "";
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      opacity: .35;
+      border-color: #d7ddcb;
+      border-style: solid;
+    }
+    .stage::before { top: 14px; left: 14px; border-width: 1px 0 0 1px; border-radius: 5px 0 0; }
+    .stage::after { right: 14px; bottom: 14px; border-width: 0 1px 1px 0; border-radius: 0 0 5px; }
+    .featured-crest { width: 133px; height: 155px; filter: drop-shadow(0 10px 12px rgb(0 0 0 / 13%)); }
+    .featured-name { text-align: center; }
+    .featured-name .country { display: block; margin-bottom: 8px; color: var(--muted); font-size: 11px; letter-spacing: .13em; }
+    .featured-name strong { font-size: clamp(25px, 3vw, 34px); letter-spacing: -.045em; }
+    .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .choice {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 13px;
+      text-align: left;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+    .choice:hover:not(:disabled) { transform: translateY(-1px); border-color: #a7c675; background: #fbfdf6; }
+    .choice:focus-visible, .mode-button:focus-visible, .region-button:focus-visible, .difficulty-button:focus-visible, .next-button:focus-visible, .restart-button:focus-visible {
+      outline: 3px solid rgb(128 171 64 / 35%);
+      outline-offset: 2px;
+    }
+    .choice:disabled { cursor: default; }
+    .choice.correct { border-color: #a4ca69; background: #f2f8e8; }
+    .choice.incorrect { border-color: #e5a39a; background: #fff3f1; }
+    .choice-key {
+      display: grid;
+      flex: 0 0 25px;
+      width: 25px;
+      height: 25px;
+      place-items: center;
+      color: #70756c;
+      background: #f3f4f0;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .choice-copy { min-width: 0; flex: 1; }
+    .choice-name { display: block; overflow: hidden; font-size: 12px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+    .choice-region { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .choice-crest { flex: 0 0 48px; width: 48px; height: 52px; object-fit: contain; }
+    .region-button:disabled { color: #a4a79f; background: #f3f4f0; border-style: dashed; cursor: not-allowed; }
+    .feedback { display: flex; min-height: 24px; align-items: center; justify-content: space-between; gap: 12px; margin-top: 15px; }
+    .feedback-message { color: var(--muted); font-size: 12px; }
+    .feedback-message.correct { color: #54812c; font-weight: 800; }
+    .feedback-message.incorrect { color: #b14b40; font-weight: 800; }
+    .next-button, .restart-button {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 39px;
+      padding: 0 16px;
+      color: #fff;
+      background: var(--ink);
+      border: 0;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .next-button.visible, .restart-button.visible { display: inline-flex; }
+    .next-button:hover, .restart-button:hover { background: #3a4034; }
+    .start-panel { display: flex; justify-content: center; margin: 24px 0 0; }
+    .start-button {
+      min-height: 48px;
+      padding: 0 28px;
+      color: var(--green-dark);
+      background: var(--green);
+      border: 0;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: transform .16s ease, background .16s ease;
+    }
+    .start-button:hover { transform: translateY(-1px); background: #d5fa82; }
+    .sidebar { display: grid; gap: 14px; }
+    .settings-card, .stats-card { padding: 21px; }
+    .side-heading { display: flex; align-items: center; justify-content: space-between; margin: 0 0 19px; font-size: 13px; font-weight: 850; }
+    .setting-label { display: block; margin: 0 0 9px; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .07em; }
+    .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: #f1f2ed; border-radius: 9px; }
+    .mode-button {
+      min-height: 35px;
+      color: #777b72;
+      background: transparent;
+      border: 0;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .mode-button.active { color: var(--ink); background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 8%); }
+    .setting-block { margin-top: 19px; }
+    .region-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .region-button, .difficulty-button {
+      min-height: 31px;
+      padding: 0 10px;
+      color: #696e63;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .region-button.active, .difficulty-button.active { color: #2f4218; background: #f1f8e7; border-color: #b6d887; }
+    .difficulty-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .difficulty-button { padding: 0 6px; }
+    .difficulty-button strong { display: block; font-size: 10px; }
+    .difficulty-button small { display: block; margin-top: 2px; color: var(--muted); font-size: 8px; font-weight: 500; }
+    .setting-note { margin: 9px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .stats-card { padding-bottom: 18px; }
+    .stats-heading { margin-bottom: 17px; }
+    .stats-live { color: #6d8b42; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .stat { min-height: 70px; padding: 12px; background: #f7f8f4; border-radius: 8px; }
+    .stat-label { display: block; color: var(--muted); font-size: 9px; }
+    .stat-value { display: block; margin-top: 5px; font-size: 22px; font-weight: 850; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+    .stat-value small { margin-left: 2px; color: var(--muted); font-size: 10px; font-weight: 650; letter-spacing: 0; }
+    .divider { height: 1px; margin: 17px 0 13px; background: var(--line); }
+    .best-row { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
+    .best-row strong { color: var(--ink); font-size: 11px; }
+    .footnote { margin: 22px 0 0; color: #8c9086; font-size: 10px; text-align: center; }
+    .screen-reader { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .layout { display: none; }
+    body.is-playing .shell { max-width: 860px; }
+    body.is-playing main { padding-top: 24px; }
+    body.is-playing .intro,
+    body.is-playing .settings-card,
+    body.is-playing .start-panel,
+    body.is-playing .sidebar,
+    body.is-playing .footnote { display: none; }
+    body.is-playing .layout { display: grid; grid-template-columns: minmax(0, 1fr); }
+    body.is-playing .round-label { display: none; }
+    body.is-playing .quiz-score { display: inline; }
+    body.is-playing .home-button { display: inline-flex; align-items: center; }
+    @media (max-width: 860px) {
+      .shell { padding: 0 24px; }
+      .settings-card { grid-template-columns: 1fr 1fr; gap: 18px 22px; }
+      .settings-card .side-heading { margin: 0; }
+      .layout { grid-template-columns: minmax(0, 1fr) 270px; gap: 14px; }
+      .quiz-body { padding-right: 24px; padding-left: 24px; }
+      .settings-card, .stats-card { padding: 17px; }
+    }
+    @media (max-width: 700px) {
+      .shell { padding: 0 16px; }
+      .topbar { height: 68px; }
+      main { padding: 36px 0 50px; }
+      .intro { display: block; margin-bottom: 23px; }
+      .settings-card { display: block; }
+      .settings-card > .setting-block { margin-top: 19px; }
+      .layout { grid-template-columns: 1fr; }
+      .quiz-card { min-height: 0; }
+      .quiz-top { padding: 17px 19px; }
+      .quiz-body { padding: 22px 18px 23px; }
+      .stage { min-height: 222px; margin: 17px 0 18px; }
+      .featured-crest { width: 112px; height: 135px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .settings-card, .stats-card { padding: 19px; }
+    }
+    @media (max-width: 430px) {
+      .header-meta { font-size: 9px; }
+      .choice { gap: 8px; padding: 8px; }
+      .choice-key { flex-basis: 21px; width: 21px; height: 21px; }
+      .choice-name { font-size: 10px; }
+      .choice-region { font-size: 9px; }
+      .choice-crest { flex-basis: 38px; width: 38px; height: 42px; }
+      .feedback { align-items: center; flex-wrap: wrap; }
+      .feedback-message { flex: 1 1 100%; }
+      .next-button, .restart-button { margin-left: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="CREST CLUB ホーム" style="color:inherit;text-decoration:none">
+        <span class="brand-mark">CC</span>
+        <span class="brand-name">CREST CLUB</span>
+      </a>
+      <button class="home-button" id="homeButton" type="button">設定に戻る</button>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">KNOW THE CREST. KNOW THE CLUB.</p>
+          <h1>そのエンブレム、<br>どこのクラブ？</h1>
+        </div>
+      </section>
+
+      <section class="settings-card" aria-label="クイズ設定">
+        <h2 class="side-heading">クイズ設定 <span aria-hidden="true">⚙</span></h2>
+        <div class="setting-block">
+          <span class="setting-label">出題モード</span>
+          <div class="mode-switch" role="group" aria-label="出題モード">
+            <button class="mode-button active" type="button" data-mode="crest">クレスト → チーム名</button>
+            <button class="mode-button" type="button" data-mode="name">チーム名 → クレスト</button>
+          </div>
+        </div>
+        <div class="setting-block">
+          <span class="setting-label">地域</span>
+          <div class="region-list" role="group" aria-label="地域を選択">
+            <button class="region-button active" type="button" data-region="all">全地域</button>
+            <button class="region-button" type="button" data-region="europe">ヨーロッパ</button>
+            <button class="region-button" type="button" data-region="southAmerica">南米</button>
+            <button class="region-button" type="button" data-region="asia">アジア</button>
+            <button class="region-button" type="button" data-region="northAmerica">北中米</button>
+            <button class="region-button" type="button" data-region="africa">アフリカ</button>
+          </div>
+        </div>
+        <div class="setting-block">
+          <span class="setting-label">難易度</span>
+          <div class="difficulty-list" role="group" aria-label="難易度">
+            <button class="difficulty-button active" type="button" data-difficulty="easy"><strong>初級</strong><small>ゆっくり</small></button>
+            <button class="difficulty-button" type="button" data-difficulty="normal"><strong>中級</strong><small>ふつう</small></button>
+            <button class="difficulty-button" type="button" data-difficulty="hard"><strong>上級</strong><small>スピード</small></button>
+          </div>
+          <p class="setting-note" id="difficultyNote">4択・制限時間20秒。まずは気軽に挑戦！</p>
+        </div>
+      </section>
+
+      <div class="start-panel">
+        <button class="start-button" id="startButton" type="button">クイズを始める <span aria-hidden="true">→</span></button>
+      </div>
+
+      <div class="layout">
+        <section class="quiz-card" aria-label="クイズ">
+          <div class="quiz-top">
+            <span class="round-label" id="roundLabel">DAILY CHALLENGE <span aria-hidden="true">·</span> <span id="regionLabel">全地域</span></span>
+            <span class="round-number"><span>QUESTION</span> &nbsp;<b id="questionNumber">01</b><span> / 10</span></span>
+            <span class="quiz-score">スコア <b id="quizScore">0</b></span>
+          </div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="quiz-body">
+            <div class="prompt-line">
+              <h2 class="prompt-title" id="promptTitle">このクラブのクレストは？</h2>
+              <div class="timer" id="timer" aria-label="残り時間">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.2 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span id="timerValue">20</span>s
+              </div>
+            </div>
+            <div class="stage" id="stage" aria-live="polite"></div>
+            <div class="choices" id="choices" aria-label="回答を選択"></div>
+            <div class="feedback">
+              <span class="feedback-message" id="feedback" aria-live="polite">正解だと思う選択肢を選んでください。</span>
+              <button class="next-button" id="nextButton" type="button">次の問題 <span aria-hidden="true">→</span></button>
+              <button class="restart-button" id="restartButton" type="button">もう一度挑戦 <span aria-hidden="true">↻</span></button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="stats-card" aria-label="今回のスコア">
+            <h2 class="side-heading stats-heading">今回のスコア <span class="stats-live">● LIVE</span></h2>
+            <div class="stats-grid">
+              <div class="stat"><span class="stat-label">正解数</span><strong class="stat-value"><span id="scoreValue">0</span><small> / 10</small></strong></div>
+              <div class="stat"><span class="stat-label">正答率</span><strong class="stat-value"><span id="accuracyValue">—</span><small id="accuracyUnit"></small></strong></div>
+            </div>
+            <div class="divider"></div>
+            <div class="best-row"><span>自己ベスト</span><strong><span id="bestValue">0</span> / 10</strong></div>
+          </section>
+        </aside>
+      </div>
+      <p class="footnote">全10問。設定を変えると、新しいラウンドが始まります。<br>※使用素材とライセンスは <a href="assets/ATTRIBUTION.md" target="_blank" rel="noreferrer">クレジット一覧</a> をご確認ください。素材が2クラブ未満の地域は選択できません。</p>
+    </main>
+  </div>
+
+  <script>
+    const clubs = [
+      { name: "バイエルン・ミュンヘン", country: "ドイツ", region: "europe", crest: "assets/crests/bayern.svg", era: "2024年版" },
+      { name: "リヴァプール FC", country: "イングランド", region: "europe", crest: "assets/crests/liverpool.png", era: "2024年版" },
+      { name: "ユヴェントス", country: "イタリア", region: "europe", crest: "assets/crests/juventus-2017.jpg", era: "2017–2020年版" },
+      { name: "ボカ・ジュニアーズ", country: "アルゼンチン", region: "southAmerica", crest: "assets/crests/boca.svg", era: "クラブ公式ロゴ" },
+      { name: "リーベル・プレート", country: "アルゼンチン", region: "southAmerica", crest: "assets/crests/river-plate.svg", era: "2006–2014年版" },
+      { name: "フラメンゴ", country: "ブラジル", region: "southAmerica", crest: "assets/crests/flamengo.svg", era: "クラブ公式ロゴ" },
+      { name: "アル・アハリ", country: "エジプト", region: "africa", crest: "assets/crests/al-ahly-1929-small.png", era: "1929年のロゴ" },
+      { name: "ウィダード・カサブランカ", country: "モロッコ", region: "africa", crest: "assets/crests/wydad.svg", era: "2021年版" },
+      { name: "アル・ヒラル", country: "サウジアラビア", region: "asia", crest: "assets/crests/al-hilal.png", era: "2022年版" },
+      { name: "LA ギャラクシー", country: "アメリカ", region: "northAmerica", crest: "assets/crests/la-galaxy.svg", era: "クラブ公式ロゴ" }
+    ];
+
+    const regionNames = {
+      all: "全地域", europe: "ヨーロッパ", southAmerica: "南米",
+      asia: "アジア", northAmerica: "北中米", africa: "アフリカ"
+    };
+    const difficultySettings = {
+      easy: { seconds: 20, count: 4 },
+      normal: { seconds: 12, count: 6 },
+      hard: { seconds: 8, count: 8 }
+    };
+    const state = {
+      mode: "crest", region: "all", difficulty: "easy", round: [], index: 0,
+      score: 0, answered: false, remaining: 20, interval: null
+    };
+    const $ = (selector) => document.querySelector(selector);
+    const stage = $("#stage");
+    const choices = $("#choices");
+    const timer = $("#timer");
+    const timerValue = $("#timerValue");
+
+    function shuffle(items) {
+      const result = [...items];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function getPool() {
+      return state.region === "all" ? clubs : clubs.filter((club) => club.region === state.region);
+    }
+
+    function updateDifficultyNote() {
+      const setting = difficultySettings[state.difficulty];
+      const optionCount = Math.min(setting.count, getPool().length);
+      const pace = state.difficulty === "easy" ? "まずは気軽に挑戦！" : state.difficulty === "normal" ? "少しテンポアップ。" : "直感で答えよう！";
+      $("#difficultyNote").textContent = `${optionCount}択・制限時間${setting.seconds}秒。${pace}`;
+    }
+
+    function reportImageError(image, club) {
+      image.addEventListener("error", () => {
+        if (state.answered) return;
+        state.answered = true;
+        clearInterval(state.interval);
+        [...choices.children].forEach((button) => { button.disabled = true; });
+        const feedback = $("#feedback");
+        feedback.className = "feedback-message incorrect";
+        feedback.textContent = `画像を読み込めませんでした: ${club.crest}`;
+      }, { once: true });
+    }
+
+    function updateRegionAvailability() {
+      document.querySelectorAll(".region-button").forEach((button) => {
+        const available = clubs.filter((club) => club.region === button.dataset.region).length >= 2;
+        button.disabled = button.dataset.region !== "all" && !available;
+        button.title = button.disabled ? "利用できるクレスト素材が2件未満です" : "";
+        button.textContent = button.disabled ? `${regionNames[button.dataset.region]}（素材不足）` : regionNames[button.dataset.region];
+      });
+    }
+
+    function startRound() {
+      clearInterval(state.interval);
+      document.body.classList.add("is-playing");
+      const pool = getPool();
+      state.round = [];
+      while (state.round.length < 10) {
+        const batch = shuffle(pool);
+        if (state.round.length && batch.length > 1 && batch[0] === state.round[state.round.length - 1]) {
+          [batch[0], batch[1]] = [batch[1], batch[0]];
+        }
+        state.round.push(...batch);
+      }
+      state.round.length = 10;
+      state.index = 0;
+      state.score = 0;
+      state.answered = false;
+      $("#scoreValue").textContent = "0";
+      $("#quizScore").textContent = "0";
+      $("#accuracyValue").textContent = "—";
+      $("#accuracyUnit").textContent = "";
+      $("#regionLabel").textContent = regionNames[state.region];
+      $("#progressFill").style.width = "0%";
+      $("#nextButton").classList.remove("visible");
+      $("#restartButton").classList.remove("visible");
+      updateDifficultyNote();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      clearInterval(state.interval);
+      const club = state.round[state.index];
+      if (!club) {
+        renderComplete();
+        return;
+      }
+      timer.style.visibility = "visible";
+      state.answered = false;
+      $("#questionNumber").textContent = String(state.index + 1).padStart(2, "0");
+      $("#progressFill").style.width = `${(state.index / 10) * 100}%`;
+      $("#promptTitle").textContent = state.mode === "crest" ? "このクレストはどのクラブ？" : "このクラブのクレストは？";
+      $("#feedback").className = "feedback-message";
+      $("#feedback").textContent = "正解だと思う選択肢を選んでください。";
+      $("#nextButton").classList.remove("visible");
+      $("#nextButton").innerHTML = state.index === 9 ? "結果を見る <span aria-hidden=\"true\">→</span>" : "次の問題 <span aria-hidden=\"true\">→</span>";
+      $("#restartButton").classList.remove("visible");
+      stage.innerHTML = `${state.mode === "crest"
+        ? `<img class="featured-crest" src="${club.crest}" alt="サッカークラブのクレスト">`
+        : `<div class="featured-name"><span class="country">${club.country} · ${club.era}</span><strong>${club.name}</strong></div>`}<span class="stage-note">${club.era}</span>`;
+      const featuredCrest = stage.querySelector(".featured-crest");
+      if (featuredCrest) reportImageError(featuredCrest, club);
+
+      const pool = getPool();
+      const optionCount = Math.min(difficultySettings[state.difficulty].count, pool.length);
+      const decoys = shuffle(pool.filter((item) => item !== club)).slice(0, optionCount - 1);
+      const options = shuffle([club, ...decoys]);
+      choices.replaceChildren(...options.map((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice";
+        button.dataset.answer = option === club ? "true" : "false";
+        button.setAttribute("aria-label", state.mode === "crest" ? option.name : `選択肢 ${String.fromCharCode(65 + index)} のクレスト`);
+        button.innerHTML = state.mode === "crest"
+          ? `<span class="choice-key">${String.fromCharCode(65 + index)}</span><span class="choice-copy"><span class="choice-name">${option.name}</span><span class="choice-region">${option.country} · ${regionNames[option.region]}</span></span>`
+          : `<span class="choice-key">${String.fromCharCode(65 + index)}</span><img class="choice-crest" alt="" src="${option.crest}">`;
+        const choiceCrest = button.querySelector(".choice-crest");
+        if (choiceCrest) reportImageError(choiceCrest, option);
+        button.addEventListener("click", () => submitAnswer(button, club));
+        return button;
+      }));
+      state.remaining = difficultySettings[state.difficulty].seconds;
+      updateTimer();
+      state.interval = setInterval(() => {
+        state.remaining -= 1;
+        updateTimer();
+        if (state.remaining <= 0) submitAnswer(null, club);
+      }, 1000);
+    }
+
+    function updateTimer() {
+      timerValue.textContent = String(state.remaining);
+      timer.classList.toggle("is-low", state.remaining <= 5);
+    }
+
+    function submitAnswer(selected, answer) {
+      if (state.answered) return;
+      state.answered = true;
+      clearInterval(state.interval);
+      const isCorrect = selected?.dataset.answer === "true";
+      if (isCorrect) state.score += 1;
+      const correctButton = [...choices.children].find((button) => button.dataset.answer === "true");
+      const correctKey = correctButton?.querySelector(".choice-key")?.textContent;
+      [...choices.children].forEach((button) => {
+        button.disabled = true;
+        if (button.dataset.answer === "true") button.classList.add("correct");
+        else if (button === selected) button.classList.add("incorrect");
+      });
+      $("#scoreValue").textContent = String(state.score);
+      $("#quizScore").textContent = String(state.score);
+      $("#accuracyValue").textContent = `${Math.round((state.score / (state.index + 1)) * 100)}`;
+      $("#accuracyUnit").textContent = "%";
+      const feedback = $("#feedback");
+      feedback.className = `feedback-message ${isCorrect ? "correct" : "incorrect"}`;
+      if (state.mode === "name") {
+        feedback.textContent = isCorrect
+          ? `正解！${correctKey}のクレストが「${answer.name}」（${answer.era}）です。`
+          : selected
+            ? `不正解。正解は${correctKey}のクレスト（「${answer.name}」、${answer.era}）です。`
+            : `時間切れ。正解は${correctKey}のクレスト（「${answer.name}」、${answer.era}）です。`;
+      } else {
+        feedback.textContent = isCorrect
+          ? `正解！「${answer.name}」のクレスト（${answer.era}）でした。`
+          : selected
+            ? `不正解。正解は「${answer.name}」のクレスト（${answer.era}）でした。`
+            : `時間切れ。正解は「${answer.name}」のクレスト（${answer.era}）でした。`;
+      }
+      $("#nextButton").classList.add("visible");
+    }
+
+    function renderComplete() {
+      clearInterval(state.interval);
+      $("#progressFill").style.width = "100%";
+      $("#questionNumber").textContent = "10";
+      $("#promptTitle").textContent = "ラウンド終了！";
+      $("#timer").style.visibility = "hidden";
+      stage.innerHTML = `<div class="featured-name"><span class="country">YOUR FINAL SCORE</span><strong>${state.score} <small style="font-size:16px;color:#777b72">/ 10</small></strong></div>`;
+      choices.replaceChildren();
+      $("#feedback").className = "feedback-message correct";
+      $("#feedback").textContent = state.score >= 8 ? "すばらしい！世界のクラブにかなり詳しいですね。" : state.score >= 5 ? "ナイスチャレンジ！次は満点を目指そう。" : "挑戦ありがとう！もう一度プレイして覚えよう。";
+      $("#nextButton").classList.remove("visible");
+      $("#restartButton").classList.add("visible");
+      try {
+        const best = Number(localStorage.getItem("crest-club-best") || 0);
+        const newBest = Math.max(best, state.score);
+        localStorage.setItem("crest-club-best", String(newBest));
+        $("#bestValue").textContent = String(newBest);
+      } catch {
+        $("#bestValue").textContent = String(state.score);
+      }
+    }
+
+    function setActive(selector, attribute, value) {
+      document.querySelectorAll(selector).forEach((button) => {
+        button.classList.toggle("active", button.dataset[attribute] === value);
+      });
+    }
+
+    document.querySelectorAll(".mode-button").forEach((button) => button.addEventListener("click", () => {
+      state.mode = button.dataset.mode;
+      setActive(".mode-button", "mode", state.mode);
+    }));
+    document.querySelectorAll(".region-button").forEach((button) => button.addEventListener("click", () => {
+      state.region = button.dataset.region;
+      setActive(".region-button", "region", state.region);
+    }));
+    document.querySelectorAll(".difficulty-button").forEach((button) => button.addEventListener("click", () => {
+      state.difficulty = button.dataset.difficulty;
+      setActive(".difficulty-button", "difficulty", state.difficulty);
+      updateDifficultyNote();
+    }));
+    $("#startButton").addEventListener("click", startRound);
+    $("#homeButton").addEventListener("click", () => {
+      clearInterval(state.interval);
+      document.body.classList.remove("is-playing");
+    });
+    $("#nextButton").addEventListener("click", () => {
+      state.index += 1;
+      renderQuestion();
+    });
+    $("#restartButton").addEventListener("click", startRound);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && $("#nextButton").classList.contains("visible")) $("#nextButton").click();
+      if (event.key === "Enter" && $("#restartButton").classList.contains("visible")) $("#restartButton").click();
+    });
+    try {
+      $("#bestValue").textContent = localStorage.getItem("crest-club-best") || "0";
+    } catch {
+      $("#bestValue").textContent = "0";
+    }
+    updateRegionAvailability();
+    updateDifficultyNote();
+  </script>
+</body>
+</html>
