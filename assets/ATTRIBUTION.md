@@ -1,4 +1,4 @@
-# Crest image credits
+# Emblem image credits
 
 The quiz uses locally stored files from Wikimedia Commons. Public-domain status
 below is the status stated on each file page; trademarks may still apply.

@@ -3,20 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f5f0">
-  <title>CREST CLUB — 世界のクラブクイズ</title>
+  <meta name="theme-color" content="#101310">
+  <title>EMBLEM CLUB — 世界のクラブクイズ</title>
   <style>
     :root {
-      color-scheme: light;
-      --paper: #f5f5f0;
-      --ink: #171916;
-      --muted: #777b72;
-      --line: #dedfd7;
-      --green: #c9f36a;
-      --green-dark: #233310;
-      --white: #fff;
-      --red: #d75c4d;
-      --shadow: 0 16px 48px rgb(34 39 28 / 7%);
+      color-scheme: dark;
+      --paper: #101310;
+      --ink: #f0f3e9;
+      --muted: #adb6a3;
+      --line: #343c31;
+      --accent: #82b4ff;
+      --accent-ink: #10233d;
+      --white: #252b24;
+      --surface: #1b201a;
+      --surface-raised: #252b24;
+      --surface-inset: #141813;
+      --success: #8fd7ff;
+      --error: #ff9a8d;
+      --shadow: 0 16px 48px rgb(0 0 0 / 28%);
       font-family: Inter, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
     }
 
@@ -26,7 +30,7 @@
       margin: 0;
       color: var(--ink);
       background:
-        radial-gradient(ellipse at 87% 2%, rgb(201 243 106 / 17%), transparent 25rem),
+        radial-gradient(ellipse at 87% 2%, rgb(76 133 210 / 16%), transparent 25rem),
         var(--paper);
     }
     button { font: inherit; }
@@ -51,7 +55,7 @@
       cursor: pointer;
     }
     .home-button:focus-visible, .start-button:focus-visible {
-      outline: 3px solid rgb(128 171 64 / 35%);
+      outline: 3px solid rgb(112 169 245 / 55%);
       outline-offset: 2px;
     }
     .brand { display: flex; align-items: center; gap: 12px; }
@@ -60,8 +64,8 @@
       width: 35px;
       height: 35px;
       place-items: center;
-      color: var(--green-dark);
-      background: var(--green);
+      color: var(--accent-ink);
+      background: var(--accent);
       border-radius: 50%;
       font-size: 15px;
       font-weight: 900;
@@ -71,7 +75,7 @@
     .brand-name { font-size: 14px; font-weight: 900; letter-spacing: .13em; }
     main { padding: 40px 0 76px; }
     .intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: 34px; }
-    .eyebrow { margin: 0 0 12px; color: #64704f; font-size: 10px; font-weight: 800; letter-spacing: .2em; }
+    .eyebrow { margin: 0 0 12px; color: #9dc5ff; font-size: 10px; font-weight: 800; letter-spacing: .2em; }
     h1 { margin: 0; font-size: clamp(32px, 4vw, 48px); line-height: 1.16; letter-spacing: -.055em; }
     .settings-card {
       display: grid;
@@ -84,7 +88,7 @@
     .settings-card > .setting-block { margin-top: 0; }
     .layout { display: grid; grid-template-columns: minmax(0, 1fr) 302px; gap: 20px; align-items: start; }
     .quiz-card, .settings-card, .stats-card {
-      background: rgb(255 255 255 / 78%);
+      background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 16px;
       box-shadow: var(--shadow);
@@ -99,11 +103,11 @@
     }
     .round-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
     .round-number { color: var(--ink); font-size: 13px; font-weight: 800; }
-    .round-number span { color: #a0a397; font-weight: 500; }
+    .round-number span { color: var(--muted); font-weight: 500; }
     .quiz-score { display: none; color: var(--muted); font-size: 11px; font-weight: 700; }
     .quiz-score b { margin-left: 5px; color: var(--ink); font-size: 15px; }
-    .progress-track { height: 3px; background: #eceee6; }
-    .progress-fill { width: 10%; height: 100%; background: #a6d74f; transition: width .3s ease; }
+    .progress-track { height: 3px; background: #303746; }
+    .progress-fill { width: 10%; height: 100%; background: var(--accent); transition: width .3s ease; }
     .quiz-body { padding: 30px 34px 32px; }
     .prompt-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .prompt-title { margin: 0; font-size: 16px; font-weight: 750; }
@@ -114,14 +118,14 @@
       min-width: 62px;
       justify-content: center;
       padding: 8px 11px;
-      color: #52574d;
-      background: #f1f3eb;
+      color: #d1d9c6;
+      background: #2a3127;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
-    .timer.is-low { color: #a23c33; background: #fff0ed; }
+    .timer.is-low { color: #ffb0a5; background: #482823; }
     .timer svg { width: 13px; height: 13px; }
     .stage {
       display: grid;
@@ -129,9 +133,9 @@
       place-items: center;
       margin: 20px 0 23px;
       background:
-        radial-gradient(ellipse at 50% 54%, rgb(214 227 193 / 36%), transparent 44%),
-        #f7f8f3;
-      border: 1px solid #eceee6;
+        radial-gradient(ellipse at 50% 54%, rgb(76 133 210 / 18%), transparent 44%),
+        #151a14;
+      border: 1px solid #30382c;
       border-radius: 12px;
       position: relative;
     }
@@ -140,7 +144,7 @@
       bottom: 12px;
       left: 14px;
       z-index: 1;
-      color: #858a7d;
+      color: #aab49e;
       font-size: 8px;
       font-weight: 800;
       letter-spacing: .12em;
@@ -151,12 +155,12 @@
       width: 54px;
       height: 54px;
       opacity: .35;
-      border-color: #d7ddcb;
+      border-color: #394332;
       border-style: solid;
     }
     .stage::before { top: 14px; left: 14px; border-width: 1px 0 0 1px; border-radius: 5px 0 0; }
     .stage::after { right: 14px; bottom: 14px; border-width: 0 1px 1px 0; border-radius: 0 0 5px; }
-    .featured-crest { width: 133px; height: 155px; filter: drop-shadow(0 10px 12px rgb(0 0 0 / 13%)); }
+    .featured-crest { width: 133px; height: 155px; filter: drop-shadow(0 10px 12px rgb(0 0 0 / 35%)); }
     .featured-name { text-align: center; }
     .featured-name .country { display: block; margin-bottom: 8px; color: var(--muted); font-size: 11px; letter-spacing: .13em; }
     .featured-name strong { font-size: clamp(25px, 3vw, 34px); letter-spacing: -.045em; }
@@ -175,22 +179,22 @@
       cursor: pointer;
       transition: border-color .16s ease, background .16s ease, transform .16s ease;
     }
-    .choice:hover:not(:disabled) { transform: translateY(-1px); border-color: #a7c675; background: #fbfdf6; }
+    .choice:hover:not(:disabled) { transform: translateY(-1px); border-color: #5b86bd; background: #273448; }
     .choice:focus-visible, .mode-button:focus-visible, .region-button:focus-visible, .difficulty-button:focus-visible, .next-button:focus-visible, .restart-button:focus-visible {
-      outline: 3px solid rgb(128 171 64 / 35%);
+      outline: 3px solid rgb(112 169 245 / 55%);
       outline-offset: 2px;
     }
     .choice:disabled { cursor: default; }
-    .choice.correct { border-color: #a4ca69; background: #f2f8e8; }
-    .choice.incorrect { border-color: #e5a39a; background: #fff3f1; }
+    .choice.correct { border-color: #5d9bb8; background: #1d3440; }
+    .choice.incorrect { border-color: #a85d52; background: #3a2421; }
     .choice-key {
       display: grid;
       flex: 0 0 25px;
       width: 25px;
       height: 25px;
       place-items: center;
-      color: #70756c;
-      background: #f3f4f0;
+      color: #d1d8ca;
+      background: #343b30;
       border-radius: 6px;
       font-size: 10px;
       font-weight: 800;
@@ -199,11 +203,11 @@
     .choice-name { display: block; overflow: hidden; font-size: 12px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
     .choice-region { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
     .choice-crest { flex: 0 0 48px; width: 48px; height: 52px; object-fit: contain; }
-    .region-button:disabled { color: #a4a79f; background: #f3f4f0; border-style: dashed; cursor: not-allowed; }
+    .region-button:disabled { color: #929b89; background: #20251f; border-style: dashed; cursor: not-allowed; }
     .feedback { display: flex; min-height: 24px; align-items: center; justify-content: space-between; gap: 12px; margin-top: 15px; }
     .feedback-message { color: var(--muted); font-size: 12px; }
-    .feedback-message.correct { color: #54812c; font-weight: 800; }
-    .feedback-message.incorrect { color: #b14b40; font-weight: 800; }
+    .feedback-message.correct { color: var(--success); font-weight: 800; }
+    .feedback-message.incorrect { color: var(--error); font-weight: 800; }
     .next-button, .restart-button {
       display: none;
       align-items: center;
@@ -211,8 +215,8 @@
       gap: 8px;
       min-height: 39px;
       padding: 0 16px;
-      color: #fff;
-      background: var(--ink);
+      color: var(--accent-ink);
+      background: var(--accent);
       border: 0;
       border-radius: 8px;
       font-size: 11px;
@@ -221,13 +225,13 @@
       cursor: pointer;
     }
     .next-button.visible, .restart-button.visible { display: inline-flex; }
-    .next-button:hover, .restart-button:hover { background: #3a4034; }
+    .next-button:hover, .restart-button:hover { background: #a6ccff; }
     .start-panel { display: flex; justify-content: center; margin: 24px 0 0; }
     .start-button {
       min-height: 48px;
       padding: 0 28px;
-      color: var(--green-dark);
-      background: var(--green);
+      color: var(--accent-ink);
+      background: var(--accent);
       border: 0;
       border-radius: 9px;
       font-size: 13px;
@@ -235,15 +239,15 @@
       cursor: pointer;
       transition: transform .16s ease, background .16s ease;
     }
-    .start-button:hover { transform: translateY(-1px); background: #d5fa82; }
+    .start-button:hover { transform: translateY(-1px); background: #a6ccff; }
     .sidebar { display: grid; gap: 14px; }
     .settings-card, .stats-card { padding: 21px; }
     .side-heading { display: flex; align-items: center; justify-content: space-between; margin: 0 0 19px; font-size: 13px; font-weight: 850; }
     .setting-label { display: block; margin: 0 0 9px; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .07em; }
-    .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: #f1f2ed; border-radius: 9px; }
+    .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--surface-inset); border-radius: 9px; }
     .mode-button {
       min-height: 35px;
-      color: #777b72;
+      color: #b6beae;
       background: transparent;
       border: 0;
       border-radius: 6px;
@@ -251,21 +255,21 @@
       font-weight: 750;
       cursor: pointer;
     }
-    .mode-button.active { color: var(--ink); background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 8%); }
+    .mode-button.active { color: var(--ink); background: #2b3b50; box-shadow: 0 1px 4px rgb(0 0 0 / 22%); }
     .setting-block { margin-top: 19px; }
     .region-list { display: flex; flex-wrap: wrap; gap: 6px; }
     .region-button, .difficulty-button {
       min-height: 31px;
       padding: 0 10px;
-      color: #696e63;
-      background: #fff;
+      color: #c4cbbd;
+      background: var(--surface-raised);
       border: 1px solid var(--line);
       border-radius: 7px;
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
     }
-    .region-button.active, .difficulty-button.active { color: #2f4218; background: #f1f8e7; border-color: #b6d887; }
+    .region-button.active, .difficulty-button.active { color: #c4ddff; background: #20344c; border-color: #5d84b4; }
     .difficulty-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .difficulty-button { padding: 0 6px; }
     .difficulty-button strong { display: block; font-size: 10px; }
@@ -273,16 +277,16 @@
     .setting-note { margin: 9px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
     .stats-card { padding-bottom: 18px; }
     .stats-heading { margin-bottom: 17px; }
-    .stats-live { color: #6d8b42; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
+    .stats-live { color: #9bcaff; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-    .stat { min-height: 70px; padding: 12px; background: #f7f8f4; border-radius: 8px; }
+    .stat { min-height: 70px; padding: 12px; background: var(--surface-inset); border-radius: 8px; }
     .stat-label { display: block; color: var(--muted); font-size: 9px; }
     .stat-value { display: block; margin-top: 5px; font-size: 22px; font-weight: 850; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
     .stat-value small { margin-left: 2px; color: var(--muted); font-size: 10px; font-weight: 650; letter-spacing: 0; }
     .divider { height: 1px; margin: 17px 0 13px; background: var(--line); }
     .best-row { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
     .best-row strong { color: var(--ink); font-size: 11px; }
-    .footnote { margin: 22px 0 0; color: #8c9086; font-size: 10px; text-align: center; }
+    .footnote { margin: 22px 0 0; color: #aab39f; font-size: 10px; text-align: center; }
     .screen-reader { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .layout { display: none; }
     body.is-playing .shell { max-width: 860px; }
@@ -309,13 +313,31 @@
       .topbar { height: 68px; }
       main { padding: 36px 0 50px; }
       .intro { display: block; margin-bottom: 23px; }
+      .eyebrow { font-size: 11px; }
       .settings-card { display: block; }
       .settings-card > .setting-block { margin-top: 19px; }
       .layout { grid-template-columns: 1fr; }
       .quiz-card { min-height: 0; }
       .quiz-top { padding: 17px 19px; }
       .quiz-body { padding: 22px 18px 23px; }
-      .stage { min-height: 222px; margin: 17px 0 18px; }
+      .stage { min-height: 222px; margin: 17px 0 18px; background: radial-gradient(ellipse at 50% 54%, rgb(76 133 210 / 18%), transparent 44%), #151a14; }
+      .prompt-title { font-size: 17px; font-weight: 850; }
+      .round-label, .round-number { font-size: 12px; font-weight: 800; }
+      .round-number span { color: #adb6a3; }
+      .choice { min-height: 58px; }
+      .choice-key { font-size: 11px; }
+      .choice-name { font-size: 12px; font-weight: 800; }
+      .choice-region { color: #c0c9b5; font-size: 11px; font-weight: 650; }
+      .feedback-message { color: #c5ceba; font-size: 13px; font-weight: 700; }
+      .setting-label { color: #c5ceba; font-size: 12px; font-weight: 850; }
+      .mode-button, .region-button, .difficulty-button { color: #c5ceba; font-size: 11px; font-weight: 800; }
+      .difficulty-button strong { font-size: 11px; }
+      .difficulty-button small { color: #adb6a3; font-size: 10px; font-weight: 650; }
+      .setting-note { margin-top: 10px; color: #adb6a3; font-size: 12px; font-weight: 650; }
+      .region-button:disabled { color: #929b89; }
+      .stat-label, .best-row { color: #adb6a3; font-size: 11px; font-weight: 650; }
+      .stage-note { color: #adb6a3; font-size: 10px; font-weight: 850; }
+      .footnote { color: #adb6a3; font-size: 11px; font-weight: 600; }
       .featured-crest { width: 112px; height: 135px; }
       .sidebar { grid-template-columns: 1fr; }
       .settings-card, .stats-card { padding: 19px; }
@@ -324,8 +346,9 @@
       .header-meta { font-size: 9px; }
       .choice { gap: 8px; padding: 8px; }
       .choice-key { flex-basis: 21px; width: 21px; height: 21px; }
-      .choice-name { font-size: 10px; }
-      .choice-region { font-size: 9px; }
+      .choices { grid-template-columns: 1fr; }
+      .choice-name { font-size: 13px; }
+      .choice-region { font-size: 11px; }
       .choice-crest { flex-basis: 38px; width: 38px; height: 42px; }
       .feedback { align-items: center; flex-wrap: wrap; }
       .feedback-message { flex: 1 1 100%; }
@@ -336,9 +359,9 @@
 <body>
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="#" aria-label="CREST CLUB ホーム" style="color:inherit;text-decoration:none">
+      <a class="brand" href="#" aria-label="EMBLEM CLUB ホーム" style="color:inherit;text-decoration:none">
         <span class="brand-mark">CC</span>
-        <span class="brand-name">CREST CLUB</span>
+        <span class="brand-name">EMBLEM CLUB</span>
       </a>
       <button class="home-button" id="homeButton" type="button">設定に戻る</button>
     </header>
@@ -346,7 +369,7 @@
     <main>
       <section class="intro">
         <div>
-          <p class="eyebrow">KNOW THE CREST. KNOW THE CLUB.</p>
+          <p class="eyebrow">KNOW THE EMBLEM. KNOW THE CLUB.</p>
           <h1>そのエンブレム、<br>どこのクラブ？</h1>
         </div>
       </section>
@@ -356,8 +379,8 @@
         <div class="setting-block">
           <span class="setting-label">出題モード</span>
           <div class="mode-switch" role="group" aria-label="出題モード">
-            <button class="mode-button active" type="button" data-mode="crest">クレスト → チーム名</button>
-            <button class="mode-button" type="button" data-mode="name">チーム名 → クレスト</button>
+            <button class="mode-button active" type="button" data-mode="crest">エンブレム → チーム名</button>
+            <button class="mode-button" type="button" data-mode="name">チーム名 → エンブレム</button>
           </div>
         </div>
         <div class="setting-block">
@@ -396,7 +419,7 @@
           <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
           <div class="quiz-body">
             <div class="prompt-line">
-              <h2 class="prompt-title" id="promptTitle">このクラブのクレストは？</h2>
+              <h2 class="prompt-title" id="promptTitle">このクラブのエンブレムは？</h2>
               <div class="timer" id="timer" aria-label="残り時間">
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.2 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 <span id="timerValue">20</span>s
@@ -497,7 +520,7 @@
       document.querySelectorAll(".region-button").forEach((button) => {
         const available = clubs.filter((club) => club.region === button.dataset.region).length >= 2;
         button.disabled = button.dataset.region !== "all" && !available;
-        button.title = button.disabled ? "利用できるクレスト素材が2件未満です" : "";
+        button.title = button.disabled ? "利用できるエンブレム素材が2件未満です" : "";
         button.textContent = button.disabled ? `${regionNames[button.dataset.region]}（素材不足）` : regionNames[button.dataset.region];
       });
     }
@@ -541,14 +564,14 @@
       state.answered = false;
       $("#questionNumber").textContent = String(state.index + 1).padStart(2, "0");
       $("#progressFill").style.width = `${(state.index / 10) * 100}%`;
-      $("#promptTitle").textContent = state.mode === "crest" ? "このクレストはどのクラブ？" : "このクラブのクレストは？";
+      $("#promptTitle").textContent = state.mode === "crest" ? "このエンブレムはどのクラブ？" : "このクラブのエンブレムは？";
       $("#feedback").className = "feedback-message";
       $("#feedback").textContent = "正解だと思う選択肢を選んでください。";
       $("#nextButton").classList.remove("visible");
       $("#nextButton").innerHTML = state.index === 9 ? "結果を見る <span aria-hidden=\"true\">→</span>" : "次の問題 <span aria-hidden=\"true\">→</span>";
       $("#restartButton").classList.remove("visible");
       stage.innerHTML = `${state.mode === "crest"
-        ? `<img class="featured-crest" src="${club.crest}" alt="サッカークラブのクレスト">`
+        ? `<img class="featured-crest" src="${club.crest}" alt="サッカークラブのエンブレム">`
         : `<div class="featured-name"><span class="country">${club.country} · ${club.era}</span><strong>${club.name}</strong></div>`}<span class="stage-note">${club.era}</span>`;
       const featuredCrest = stage.querySelector(".featured-crest");
       if (featuredCrest) reportImageError(featuredCrest, club);
@@ -562,7 +585,7 @@
         button.type = "button";
         button.className = "choice";
         button.dataset.answer = option === club ? "true" : "false";
-        button.setAttribute("aria-label", state.mode === "crest" ? option.name : `選択肢 ${String.fromCharCode(65 + index)} のクレスト`);
+        button.setAttribute("aria-label", state.mode === "crest" ? option.name : `選択肢 ${String.fromCharCode(65 + index)} のエンブレム`);
         button.innerHTML = state.mode === "crest"
           ? `<span class="choice-key">${String.fromCharCode(65 + index)}</span><span class="choice-copy"><span class="choice-name">${option.name}</span><span class="choice-region">${option.country} · ${regionNames[option.region]}</span></span>`
           : `<span class="choice-key">${String.fromCharCode(65 + index)}</span><img class="choice-crest" alt="" src="${option.crest}">`;
@@ -606,16 +629,16 @@
       feedback.className = `feedback-message ${isCorrect ? "correct" : "incorrect"}`;
       if (state.mode === "name") {
         feedback.textContent = isCorrect
-          ? `正解！${correctKey}のクレストが「${answer.name}」（${answer.era}）です。`
+          ? `正解！${correctKey}のエンブレムが「${answer.name}」（${answer.era}）です。`
           : selected
-            ? `不正解。正解は${correctKey}のクレスト（「${answer.name}」、${answer.era}）です。`
-            : `時間切れ。正解は${correctKey}のクレスト（「${answer.name}」、${answer.era}）です。`;
+            ? `不正解。正解は${correctKey}のエンブレム（「${answer.name}」、${answer.era}）です。`
+            : `時間切れ。正解は${correctKey}のエンブレム（「${answer.name}」、${answer.era}）です。`;
       } else {
         feedback.textContent = isCorrect
-          ? `正解！「${answer.name}」のクレスト（${answer.era}）でした。`
+          ? `正解！「${answer.name}」のエンブレム（${answer.era}）でした。`
           : selected
-            ? `不正解。正解は「${answer.name}」のクレスト（${answer.era}）でした。`
-            : `時間切れ。正解は「${answer.name}」のクレスト（${answer.era}）でした。`;
+            ? `不正解。正解は「${answer.name}」のエンブレム（${answer.era}）でした。`
+            : `時間切れ。正解は「${answer.name}」のエンブレム（${answer.era}）でした。`;
       }
       $("#nextButton").classList.add("visible");
     }
@@ -626,7 +649,7 @@
       $("#questionNumber").textContent = "10";
       $("#promptTitle").textContent = "ラウンド終了！";
       $("#timer").style.visibility = "hidden";
-      stage.innerHTML = `<div class="featured-name"><span class="country">YOUR FINAL SCORE</span><strong>${state.score} <small style="font-size:16px;color:#777b72">/ 10</small></strong></div>`;
+      stage.innerHTML = `<div class="featured-name"><span class="country">YOUR FINAL SCORE</span><strong>${state.score} <small style="font-size:16px;color:var(--muted)">/ 10</small></strong></div>`;
       choices.replaceChildren();
       $("#feedback").className = "feedback-message correct";
       $("#feedback").textContent = state.score >= 8 ? "すばらしい！世界のクラブにかなり詳しいですね。" : state.score >= 5 ? "ナイスチャレンジ！次は満点を目指そう。" : "挑戦ありがとう！もう一度プレイして覚えよう。";
